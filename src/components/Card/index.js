@@ -11,6 +11,7 @@ const styles = {
     margin: '0 auto'
   },
   button: {
+    fontSize: 14,
     margin: '0 auto'
   }
 };
@@ -24,7 +25,7 @@ function CardComponent({ pokemon, classes, showDetail }) {
       <CardMedia>
         <img src={pokemonImage} alt={name} />
       </CardMedia>
-      <CardTitle title={capitalizeFirstLetter(name)} />
+      <CardTitle titleStyle={{ fontSize: 16 }} title={capitalizeFirstLetter(name)} />
       <CardActions>
         <FlatButton
           primary

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Col, Row } from 'react-flexbox-grid';
 import Dialog from 'material-ui/Dialog';
-import { AppBar, CircularProgress } from 'material-ui';
+import { AppBar, Chip } from 'material-ui';
+import uuid from 'uuid/v1';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import InfiniteScroll from 'react-infinite-scroller'
 import { createStructuredSelector } from 'reselect';
@@ -10,8 +11,12 @@ import * as pokemonActions from 'actions/pokemon';
 import * as typeActions from 'actions/type';
 import ContentList from 'components/ContentList';
 import Filter from 'components/Filter';
+import RowDetail from 'components/RowDetail';
+import Loader from 'components/Loader';
 import { getQueryString, capitalizeFirstLetter, getPokemonImage } from 'utils';
-import * as selectors from './selectors';
+import * as pokemonSelectors from 'selectors/pokemon';
+import * as pokemonTypeSelectors from 'selectors/pokemonType';
+import * as pokemonDetailSelectors from 'selectors/pokemonDetail';
 
 class App extends Component {
 
@@ -44,14 +49,6 @@ class App extends Component {
     }
   }
 
-  renderLoader() {
-    return <Row center="xs">
-      <Col xs={12}>
-        <CircularProgress size={50} />
-      </Col>
-    </Row>;
-  }
-
   openPokemon(id) {
     const { getPokemonDetail } = this.props;
     getPokemonDetail(id);
@@ -74,7 +71,7 @@ class App extends Component {
       <InfiniteScroll
         pageStart={0}
         loadMore={() => this.loadMore()}
-        loader={this.renderLoader()}
+        loader={<Loader />}
         hasMore={hasMoreItems}
         useWindow={true}
       >
@@ -84,37 +81,56 @@ class App extends Component {
   }
 
   renderDialog() {
-    const { pokemonDetail, loadingPokemon } = this.props;
+    const { pokemonDetail, loadingPokemonDetail } = this.props;
     const { popupOpen } = this.state;
-    if (!pokemonDetail) {
-      return <div></div>;
-    }
-
-    if (loadingPokemon && popupOpen) {
-      debugger;
-      return this.renderLoader();
-    }
+    const title = pokemonDetail && `#${pokemonDetail.id} ${capitalizeFirstLetter(pokemonDetail.name)}`;
     return (
       <Dialog
-        title={`#${pokemonDetail.id} ${capitalizeFirstLetter(pokemonDetail.name)}`}
+        contentStyle={{ width: '40vw' }}
+        title={title}
         modal={false}
         open={popupOpen}
         onRequestClose={this.handleClosePopup}
       >
-        <div>
-          <img src={getPokemonImage(pokemonDetail.id)} alt={pokemonDetail.name} />
+        {
+          loadingPokemonDetail && <Loader />
+        }
+        {!loadingPokemonDetail && pokemonDetail && <div>
+          <Row center="xs">
+            <Col xs={12}>
+              <img
+                style={{ height: 150, width: 150 }}
+                src={getPokemonImage(pokemonDetail.id)}
+                alt={pokemonDetail.name}
+              />
+            </Col>
+          </Row>
           <Tabs
             inkBarStyle={{ background: 'rgb(0, 171, 68)' }}
             tabItemContainerStyle={{ backgroundColor: 'transparent' }}
           >
             <Tab style={{ color: 'rgb(0, 171, 68)' }} label="Profile" >
-
+              <RowDetail label="Type" content={(
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                  {pokemonDetail.types.map(({ type }) => (
+                    <Chip style={{ margin: 4 }} key={uuid()}>
+                      {type.name}
+                    </Chip>
+                  ))}
+                </div>
+              )} />
+              <RowDetail label="Height" content={pokemonDetail.height} />
+              <RowDetail label="Weight" content={pokemonDetail.weight} />
+              <RowDetail label="Base Experience" content={pokemonDetail.base_experience} />
+              <RowDetail label="Abilities" content={pokemonDetail.abilities.map(({ ability }) => (
+                <span key={uuid()}>{ability.name}<br /></span>
+              ))} />
             </Tab>
             <Tab style={{ color: 'rgb(0, 171, 68)' }} label="Stats" >
 
             </Tab>
           </Tabs>
-        </div>
+        </div>}
       </Dialog>
     )
   }
@@ -152,9 +168,9 @@ class App extends Component {
           value={filter}
           items={pokemonTypes}
           onChange={(evt, index, value) => this.onFilterChange(evt, index, value)} />
+        {this.renderDialog()}
         {filter === 'all' && this.renderPokemon()}
         {filter !== 'all' && this.renderPokemonByType()}
-        {this.renderDialog()}
       </div>
     );
   }
@@ -169,16 +185,16 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  pokemon: selectors.pokemon(),
-  loadingPokemon: selectors.loadingPokemon(),
-  pokemonDetail: selectors.pokemonDetail(),
-  errorLoadingPokemon: selectors.errorLoadingPokemon(),
-  nextPokemon: selectors.nextPokemon(),
-  pokemonTypes: selectors.pokemonTypes(),
-  pokemonByType: selectors.pokemonByType(),
-  loadingPokemonByType: selectors.loadingPokemonByType(),
-  errorLoadingPokemonByType: selectors.errorLoadingPokemonByType(),
-  filter: selectors.filter()
+  pokemon: pokemonSelectors.pokemon(),
+  errorLoadingPokemon: pokemonSelectors.errorLoadingPokemon(),
+  nextPokemon: pokemonSelectors.nextPokemon(),
+  pokemonDetail: pokemonDetailSelectors.pokemonDetail(),
+  loadingPokemonDetail: pokemonDetailSelectors.loadingPokemonDetail(),
+  pokemonTypes: pokemonTypeSelectors.pokemonTypes(),
+  pokemonByType: pokemonTypeSelectors.pokemonByType(),
+  loadingPokemonByType: pokemonTypeSelectors.loadingPokemonByType(),
+  errorLoadingPokemonByType: pokemonTypeSelectors.errorLoadingPokemonByType(),
+  filter: pokemonTypeSelectors.filter()
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

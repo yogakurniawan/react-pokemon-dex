@@ -16,4 +16,8 @@ describe('Loader', () => {
   it('Should render self and subcomponents', () => {
     expect(Wrapper.length).toEqual(1);
   });
+
+  it('Should contain <Loader />', () => {
+    expect(Wrapper.find(Loader).length).toEqual(1);
+  });
 });

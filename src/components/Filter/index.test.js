@@ -22,4 +22,8 @@ describe('Filter', () => {
   it('Should render self and subcomponents', () => {
     expect(Wrapper.length).toEqual(1);
   });
+
+  it('Should contain <Filter />', () => {
+    expect(Wrapper.find(Filter).length).toEqual(1);
+  });
 });

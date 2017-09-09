@@ -23,4 +23,8 @@ describe('ContentList', () => {
   it('Should render self and subcomponents', () => {
     expect(Wrapper.length).toEqual(1);
   });
+
+  it('Should contain <ContentList />', () => {
+    expect(Wrapper.find(ContentList).length).toEqual(1);
+  });
 });

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const rootState = state => state.type;
+const rootState = state => state.pokemonType;
 
 // List of Pokemon by Type
 export const pokemonByType = () => createSelector(

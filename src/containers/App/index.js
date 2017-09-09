@@ -83,7 +83,7 @@ class App extends Component {
   renderDialog() {
     const { pokemonDetail, loadingPokemonDetail } = this.props;
     const { popupOpen } = this.state;
-    const title = pokemonDetail && `#${pokemonDetail.id} ${capitalizeFirstLetter(pokemonDetail.name)}`;
+    const title = pokemonDetail ? `#${pokemonDetail.id} ${capitalizeFirstLetter(pokemonDetail.name)}` : "";
     return (
       <Dialog
         contentStyle={{ width: '40vw' }}
@@ -127,7 +127,13 @@ class App extends Component {
               ))} />
             </Tab>
             <Tab style={{ color: 'rgb(0, 171, 68)' }} label="Stats" >
-
+              {pokemonDetail.stats.map(({ base_stat, stat }) => (
+                <RowDetail key={uuid()} label={stat.name} content={
+                  <Chip>
+                    {base_stat}
+                  </Chip>
+                } />
+              ))}
             </Tab>
           </Tabs>
         </div>}
@@ -162,7 +168,7 @@ class App extends Component {
       <div>
         <AppBar
           showMenuIconButton={false}
-          title="Pokedex"
+          title="Pokédex"
         />
         <Filter
           value={filter}

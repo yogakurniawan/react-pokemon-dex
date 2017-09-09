@@ -16,7 +16,9 @@ const pokemonDetail = (state = initialState, action) => {
     case LOAD_POKEMON_DETAIL:
       return {
         ...state,
-        loading: true
+        loading: true,
+        payload: null,
+        error: null
       }
     case LOAD_POKEMON_DETAIL_SUCCESS:
       return {

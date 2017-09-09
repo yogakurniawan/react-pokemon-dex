@@ -16,7 +16,7 @@ const initialState = {
   }
 };
 
-const type = (state = initialState, action) => {
+const pokemonType = (state = initialState, action) => {
   const { type, payload, error } = action;
   switch (type) {
     case SET_FILTER:
@@ -70,4 +70,4 @@ const type = (state = initialState, action) => {
   }
 };
 
-export default type;
+export default pokemonType;

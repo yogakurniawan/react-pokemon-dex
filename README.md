@@ -20,3 +20,5 @@ The protection causes error [403 HTTP Response](https://github.com/PokeAPI/pokea
 To prevent such error, my current solution is to use proxy client to connect with US or UK IP addresses. I use [Jumbo Proxy Switcher](https://chrome.google.com/webstore/detail/jumbo-proxy-switcher/mnjmjnofadekgmfahkikcjbckdofddbb) on my chrome. That fixes the error 403 issue for now.
 
 ## Demo
+
+[React Pokemon Dex Heroku](https://react-pokemondex.herokuapp.com/)

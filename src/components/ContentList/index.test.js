@@ -2,23 +2,24 @@ import React from 'react';
 import { mount } from 'enzyme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Filter from './index';
+import ContentList from './index';
 
 injectTapEventPlugin();
 
 const props = {
-  onChange: jest.fn(),
-  items: [],
-  value: ""
+  loading: false,
+  error: null,
+  payload: [],
+  showDetail: jest.fn(),
 }
 
 const Wrapper = mount(
   <MuiThemeProvider>
-    <Filter {...props} />
+    <ContentList {...props} />
   </MuiThemeProvider>
 );
 
-describe('Filter', () => {
+describe('ContentList', () => {
   it('Should render self and subcomponents', () => {
     expect(Wrapper.length).toEqual(1);
   });
